@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/11 22:51:37 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/12 19:29:19 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,16 @@
 # include "../lib/libft/libft.h"
 
 
-typedef struct s_redr
-{
-	char	*sign;
-	char	*value;
-}	t_redr;
+// typedef struct s_redr
+// {
+// 	char	*sign;
+// 	char	*value;
+// }	t_redr;
 
 typedef struct s_lex
 {
-	char	*word;
-	t_redr	*redirection;
-	int		num;
+	char	*sign;
+	char	*value;
 }	t_lex;
 
 typedef struct s_input
