@@ -6,55 +6,68 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 20:45:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/12 19:57:05 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/15 20:12:56 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-int	is_redir(char *str)
-{
-	if (str[0] == '|' && str[1] == '\0')
-		return (0);
-	else if (str[0] == '<' && str[1] != '<')
-		return (0);
-	else if (str[0] == '<' && str[1] == '<')
-		return (1);
-	else if (str[0] == '>' && str[1] == '>')
-		return (1);
-	else if (str[0] == '<' && str[1] == '<')
-		return (1);
-	
-		
-}
-char	**tokenize(char **str)
-{
-	int		i;
-	int		count;
-	int		red_i;
-	char	**tokens;
 
+int	tokenize(char *str, t_mylist *list)
+{
+	int	i;
+	int start;
 	i = 0;
-	count = 0;
-	while (str[i] != NULL)
+	while (str[i] == ' ')
+		i++;
+	start = i;
+	if (str[i] == '<' && str[i + 1] != '<')
+		return (list->type = LS, list->value = NULL, i + 1);
+	else if (str[i] == '<' && str[i + 1] == '<')
+		return (list->type = LSLS, list->value = NULL, i + 2);
+	else if (str[i] == '>' && str[i + 1] != '>')
+		return (list->type = GRT, list->value = NULL, i + 1);
+	else if (str[i] == '>' && str[i + 1] == '>')
+		return (list->type = GRTGRT, list->value = NULL, i + 2);
+	else if (str[i] == '|')
+		return (list->type = PIPE, list->value = NULL, i + 1);
+	else
 	{
-		red_i = is_redir(str[i]);
-		if(red_i != -1)
-		{
-			if (str[i][red_i + 1] == '\0')
-				count += 2;
-			else
-				count++;
-		}
-		else
-			count++;
+		while (str[i] != '\0' && str[i] != ' ')
+			i++;
+		return (list->type = WRD, list->value = ft_substr(str, start, i - start), i + 1);
 	}
 }
 
-t_lex	*lexer(char *str)
+t_mylist	*lexer(char *str)
 {
-	char	**split_string;
-	char	**tokens;
+	t_mylist	*list;
+	t_mylist	*node;
+	t_mylist	*head;
+	char		*current;
+	int			i;
+	int			index;
 
-	split_string = ft_split(str, ' ');
-	tokens = tokenize(split_string);
+	list = NULL;
+	current = str;
+	index = 0;
+	i = 0;
+	while (current[index] != '\0')
+	{
+		node = malloc (sizeof(t_mylist));
+		if (node == NULL)
+			exit(0);//_error(ERR_MALLOC);
+		i = tokenize(&current[index], node);
+		if (list == NULL)
+			list = node;
+		else
+		{
+			head = list;
+			while (head->next != NULL)
+				head = head->next;
+			head->next = node;
+		}
+		index = index + i;
+		printf("Index %d\n", index);
+	}
+	return (list);
 }

@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 20:47:57 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/11 22:55:37 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/15 17:59:29 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,23 @@
 int	main(void)
 {
 	char	*message;
-	t_lex	*lex_result;
-	int		i;
+	t_mylist	*list;
+	t_mylist	*head;
 
-	i = 0;
 	while (1)
 	{
 		message = readline("MinniShell$: ");
 		add_history(message);
-		lex_result = lexer(message);
-		while (i < lex_result->num)
+		list = lexer(message);
+		head = list;
+		while (1)
 		{
-			if (lex_result[i].word != NULL)
-				printf("%s\n", lex_result[i].word);
-			else
-				printf("%s\n", lex_result[i].redirection->sign);
-			i++;
+			printf("Type: %d; Value: %s\n", head->type, head->value);
+			if (head->next == NULL)
+				break ;
+			head = head->next;
 		}
-		i = 0;
 	}
+
 	return (0);
 }
