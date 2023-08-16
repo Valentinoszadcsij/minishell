@@ -6,7 +6,8 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 20:45:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/11 20:45:47 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/16 22:59:16 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../headers/minishell.h"
