@@ -6,16 +6,35 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 20:45:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/16 22:00:17 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/21 20:32:42 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
+int	word_token(char *str, t_mylist *list, int i)
+{
+	int	start;
+
+	start = i;
+	list->type = WRD;
+	if (str[i] == '\0')
+		return (list->type = -1, list->value = NULL, i);
+	while (str[i] != '\0' && str[i] != ' ')
+	{
+		if (str[i] == '\"')
+			check_double_quotes(str, &i, list);
+		else if (str[i] == '\'')
+			check_single_quotes(str, &i, list);
+		i++;
+	}
+	return (list->value = ft_substr(str, start, i - start), i);
+}
+
 int	tokenize(char *str, t_mylist *list)
 {
 	int	i;
-	int start;
+
 	i = 0;
 	while (str[i] == ' ')
 		i++;
@@ -30,17 +49,10 @@ int	tokenize(char *str, t_mylist *list)
 	else if (str[i] == '|')
 		return (list->type = PIPE, list->value = NULL, i + 1);
 	else
-	{
-		start = i;
-		if (str[i] == '\0')
-			return (list->type = -1, i);
-		while (str[i] != '\0' && str[i] != ' ')
-			i++;
-		return (list->type = WRD, list->value = ft_substr(str, start, i - start), i);
-	}
+		return (word_token(str, list, i));
 }
 
-void	fill_list(t_mylist	**list, char *str, int *index)
+int	fill_list(t_mylist	**list, char *str, int *index)
 {
 	t_mylist	*node;
 	t_mylist	*head;
@@ -49,9 +61,11 @@ void	fill_list(t_mylist	**list, char *str, int *index)
 	i = 0;
 		node = malloc (sizeof(t_mylist));
 	if (node == NULL)
-		exit(0);//_error(ERR_MALLOC);
+		return (-1);//_error(ERR_MALLOC);
 	node->next = NULL;
 	i = tokenize(&str[*index], node);
+	if (node->type == WRD_SINGLE_Q)
+		return (WRD_SINGLE_Q);
 	if (*list == NULL)
 		*list = node;
 	else
@@ -61,8 +75,11 @@ void	fill_list(t_mylist	**list, char *str, int *index)
 			head = head->next;
 		if (node->type != -1)
 			head->next = node;
+		else
+			free (node);
 	}
 	*index = *index + i;
+	return (0);
 }
 
 t_mylist	*lexer(char *str)
@@ -70,11 +87,16 @@ t_mylist	*lexer(char *str)
 	t_mylist	*list;
 	char		*current;
 	int			index;
+	int			err;
 
 	list = NULL;
 	current = str;
 	index = 0;
 	while (current[index] != '\0')
-		fill_list(&list, current, &index);
+	{	
+		err = fill_list(&list, current, &index);
+		if (err != 0)
+			exit_error_lexer(err, list);
+	}
 	return (list);
 }

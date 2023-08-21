@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/15 17:27:33 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/21 20:31:40 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define LS 3
 # define GRT 4
 # define WRD 5
+# define WRD_QUOTED 6
+# define WRD_SINGLE_Q -2
 
 //Errors
 #define ERR_MALLOC 10
@@ -52,5 +54,8 @@ typedef struct s_input
 //Functions
 
 t_mylist	*lexer(char *str);
+void		exit_error_lexer(int err, t_mylist *list);
+void		check_double_quotes(char *str, int *i, t_mylist *list);
+void		check_single_quotes(char *str, int *i, t_mylist *list);
 
 #endif
