@@ -6,7 +6,7 @@
 #    By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/09 20:54:02 by voszadcs          #+#    #+#              #
-#    Updated: 2023/08/21 20:31:11 by voszadcs         ###   ########.fr        #
+#    Updated: 2023/08/23 17:25:21 by voszadcs         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ $(LIBFT):
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(LIBFT) $(OBJS) -o $(NAME) -lreadline
+	make clean
 
 clean:
 	rm -f $(OBJS)

@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 20:45:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/21 20:32:42 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/23 16:08:40 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,6 @@ int	fill_list(t_mylist	**list, char *str, int *index)
 		return (-1);//_error(ERR_MALLOC);
 	node->next = NULL;
 	i = tokenize(&str[*index], node);
-	if (node->type == WRD_SINGLE_Q)
-		return (WRD_SINGLE_Q);
 	if (*list == NULL)
 		*list = node;
 	else
@@ -78,8 +76,9 @@ int	fill_list(t_mylist	**list, char *str, int *index)
 		else
 			free (node);
 	}
-	*index = *index + i;
-	return (0);
+	if (node->type == WRD_SINGLE_Q)
+		return (WRD_SINGLE_Q);
+	return (*index = *index + i, 0);
 }
 
 t_mylist	*lexer(char *str)
@@ -96,7 +95,10 @@ t_mylist	*lexer(char *str)
 	{	
 		err = fill_list(&list, current, &index);
 		if (err != 0)
+		{	
+			free(str);
 			exit_error_lexer(err, list);
+		}
 	}
 	return (list);
 }

@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 20:20:00 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/21 20:33:49 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/23 17:29:06 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	check_double_quotes(char *str, int *i, t_mylist *list)
 {
 	*i = *i + 1;
+	list->type = WRD_QUOTED;
 	while (str[*i] != '\"' && str[*i] != '\0')
 		*i = *i + 1;
 	if (str[*i] == '\0')
@@ -24,6 +25,7 @@ void	check_double_quotes(char *str, int *i, t_mylist *list)
 void	check_single_quotes(char *str, int *i, t_mylist *list)
 {
 	*i = *i + 1;
+	list->type = WRD_QUOTED;
 	while (str[*i] != '\'' && str[*i] != '\0')
 		*i = *i + 1;
 	if (str[*i] == '\0')
