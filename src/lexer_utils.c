@@ -18,7 +18,9 @@ void	check_double_quotes(char *str, int *i, t_mylist *list)
 	list->type = WRD_QUOTED;
 	while (str[*i] != '\"' && str[*i] != '\0')
 		*i = *i + 1;
-	if (str[*i] == '\0')
+	if (str[*i] == '\"')
+		*i = *i + 1;
+	else if (str[*i] == '\0')
 		list->type = WRD_SINGLE_Q;
 }
 
@@ -28,6 +30,8 @@ void	check_single_quotes(char *str, int *i, t_mylist *list)
 	list->type = WRD_QUOTED;
 	while (str[*i] != '\'' && str[*i] != '\0')
 		*i = *i + 1;
-	if (str[*i] == '\0')
+	if (str[*i] == '\'')
+		*i = *i + 1;
+	else if (str[*i] == '\0')
 		list->type = WRD_SINGLE_Q;
 }
