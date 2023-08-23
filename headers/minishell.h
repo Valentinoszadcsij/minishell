@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/23 15:46:49 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/23 22:52:58 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct s_input
 //Functions
 
 t_mylist	*lexer(char *str);
-void		exit_error_lexer(int err, t_mylist *list);
+void		exit_error_lexer(t_mylist *list);
 void		check_double_quotes(char *str, int *i, t_mylist *list);
 void		check_single_quotes(char *str, int *i, t_mylist *list);
 

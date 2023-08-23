@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 20:45:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/23 16:08:40 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/23 23:01:07 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 int	word_token(char *str, t_mylist *list, int i)
 {
-	int	start;
-	char bla[] = {'<', '>', '|', ' '};
+	int		start;
+	char	*check_chars;
+
 	start = i;
+	check_chars = ft_substr("<>| ", 0, 4);
 	list->type = WRD;
 	if (str[i] == '\0')
 		return (list->type = -1, list->value = NULL, i);
-	while (str[i] != '\0' && ft_strchr(bla ,str[i]) == NULL)
+	while (str[i] != '\0' && ft_strchr(check_chars, str[i]) == NULL)
 	{
 		if (str[i] == '\"')
 			check_double_quotes(str, &i, list);
@@ -98,7 +100,7 @@ t_mylist	*lexer(char *str)
 		if (err != 0)
 		{	
 			free(str);
-			exit_error_lexer(err, list);
+			exit_error_lexer(list);
 		}
 	}
 	return (list);

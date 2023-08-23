@@ -6,20 +6,20 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 17:49:02 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/23 16:04:26 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/23 22:52:51 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-void	exit_error_lexer(int err, t_mylist *list)
+void	exit_error_lexer(t_mylist *list)
 {	
 	int			i;
 	t_mylist	*head;
 	t_mylist	*temp;
 
 	i = 1;
-	printf("Error: %d\n", err);
+	printf("bash: syntax error, no EOF found\n");
 	head = list;
 	while (head != NULL)
 	{	
@@ -30,6 +30,5 @@ void	exit_error_lexer(int err, t_mylist *list)
 		head = head->next;
 		i++;
 	}
-	printf("nodes to free: %d", i);
 	exit (1);
 }
