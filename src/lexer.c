@@ -15,18 +15,19 @@
 int	word_token(char *str, t_mylist *list, int i)
 {
 	int	start;
-
+	char bla[] = {'<', '>', '|', ' '};
 	start = i;
 	list->type = WRD;
 	if (str[i] == '\0')
 		return (list->type = -1, list->value = NULL, i);
-	while (str[i] != '\0' && str[i] != ' ')
+	while (str[i] != '\0' && ft_strchr(bla ,str[i]) == NULL)
 	{
 		if (str[i] == '\"')
 			check_double_quotes(str, &i, list);
 		else if (str[i] == '\'')
 			check_single_quotes(str, &i, list);
-		i++;
+		else
+			i++;
 	}
 	return (list->value = ft_substr(str, start, i - start), i);
 }
