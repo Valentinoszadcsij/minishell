@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/23 22:52:58 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/28 19:14:43 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@
 // 	char	*value;
 // }	t_redr;
 
+typedef struct s_explst
+{
+	char			*str;
+	struct s_explst	*next;
+}	t_explst;
 typedef struct s_mylist
 {
 	int				type;
@@ -46,16 +51,19 @@ typedef struct s_mylist
 	struct s_mylist	*next;
 }	t_mylist;
 
-typedef struct s_input
+typedef struct s_main
 {
-	char	**cmd;
-}	t_input;
+	char		*exit_code;
+	t_mylist	*list;
+	char		**env;	
+}	t_main;
 
 //Functions
 
-t_mylist	*lexer(char *str);
+void		lexer(char *str, t_main *main);
 void		exit_error_lexer(t_mylist *list);
 void		check_double_quotes(char *str, int *i, t_mylist *list);
 void		check_single_quotes(char *str, int *i, t_mylist *list);
-
+void		expand_tokens(t_main *main);
+void		new_node(t_explst **node, t_explst **list);
 #endif

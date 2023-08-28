@@ -1,41 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   expansion_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/09 20:47:57 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/28 19:12:37 by voszadcs         ###   ########.fr       */
+/*   Created: 2023/08/28 16:28:29 by voszadcs          #+#    #+#             */
+/*   Updated: 2023/08/28 19:15:50 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-#include <stdio.h>
 
-int	main(void)
+void	new_node(t_explst **node, t_explst **list)
 {
-	char		*message;
-	t_main		main;
-	t_mylist	*head;
+	t_explst	*head;
 
-	while (1)
+	*node = malloc(sizeof(t_explst));
+	if (!node)
+		exit(-1);//malloc error
+	(*node)->next = NULL;
+	if (*list == NULL)
+		*list = *node;
+	else
 	{
-		message = readline("MinniShell$: ");
-		add_history(message);
-		main.list = NULL; 
-		main.exit_code = malloc(2);
-		ft_strlcpy(main.exit_code, "12", 2);
-		lexer(message, &main);
-		expand_tokens(&main);
-		head = main.list;
-		while (1)
-		{
-			printf("Type: %d; Value: %s\n", head->type, head->value);
-			if (head->next == NULL)
-				break ;
+		head = *list;
+		while (head->next != NULL)
 			head = head->next;
-		}
+		head->next = *node;
 	}
-	return (0);
 }

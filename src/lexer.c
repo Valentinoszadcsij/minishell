@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 20:45:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/23 23:01:07 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/28 05:56:02 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	fill_list(t_mylist	**list, char *str, int *index)
 	int			i;
 
 	i = 0;
-		node = malloc (sizeof(t_mylist));
+	node = malloc (sizeof(t_mylist));
 	if (node == NULL)
 		return (-1);//_error(ERR_MALLOC);
 	node->next = NULL;
@@ -84,24 +84,22 @@ int	fill_list(t_mylist	**list, char *str, int *index)
 	return (*index = *index + i, 0);
 }
 
-t_mylist	*lexer(char *str)
+void	lexer(char *str, t_main *main)
 {
-	t_mylist	*list;
 	char		*current;
 	int			index;
 	int			err;
 
-	list = NULL;
+
 	current = str;
 	index = 0;
 	while (current[index] != '\0')
 	{	
-		err = fill_list(&list, current, &index);
+		err = fill_list(&main->list, current, &index);
 		if (err != 0)
 		{	
 			free(str);
-			exit_error_lexer(list);
+			exit_error_lexer(main->list);
 		}
 	}
-	return (list);
 }
