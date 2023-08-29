@@ -6,13 +6,12 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 17:25:59 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/28 19:14:59 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/29 17:49:54 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-//WRONG:
-//MOVE TEMP LIST TO CHECK_EXPANSION function
+
 void	expand(char *str, t_main *main, int *i, t_explst *node)
 {
 	*i = *i + 1;
@@ -37,9 +36,8 @@ void	check_expansions(t_main *main, t_mylist *lst)
 
 	i = 0;
 	j = 0;
-	list = NULL;
 	node = NULL;
-	printf("SEG3\n");
+	list = NULL;
 	while (lst->value[i] != '\0')
 	{
 		while (lst->value[i] != '$' && lst->value[i] != '\0')
@@ -51,16 +49,14 @@ void	check_expansions(t_main *main, t_mylist *lst)
 		{
 			new_node(&node, &list);
 			node->str = malloc(sizeof(char) * (j + 1));
-			printf("SEG4\n");
-			ft_strlcpy(node->str, &lst->value[i - j], j);
+			ft_strlcpy(node->str, &lst->value[i - j], j + 1);
 			j = 0;
-			printf("Add word\n");
 		}
 		if (lst->value[i] == '$')
 		{	
 			new_node(&node, &list);
-			expand(&lst->value[i], main, &i, node);
-			printf("Add expansion\n");
+			expand(lst->value, main, &i, node);
+			printf("%s, i = %d\n", node->str, i);
 		}
 		i++;
 	}
@@ -72,16 +68,18 @@ void	check_expansions(t_main *main, t_mylist *lst)
 		{
 			temp = new;
 			new = ft_strjoin(temp, node->str);
-			free(node->str);
-			free(temp);
+			// free(node->str);
+			if (temp)
+				free(temp);
 			node = node->next;
 		}
 		if (node->next == NULL)
 		{
 			temp = new;
 			new = ft_strjoin(temp, node->str);
-			free(node->str);
-			free(temp);
+			// free(node->str);
+			if (temp)
+				free(temp);
 		}
 		temp = lst->value;
 		lst->value = new;
@@ -94,13 +92,11 @@ void	expand_tokens(t_main *main)
 	t_mylist	*head;
 
 	head = main->list;
-	printf("SEG1\n");
 	while (head->next != NULL)
 	{
 		if (head->type == WRD || head->type == WRD_QUOTED)
 			check_expansions(main, head);
 		head = head->next;
-		printf("SEG2\n");
 	}
 	if (head->next == NULL)
 	{
