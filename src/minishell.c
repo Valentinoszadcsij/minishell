@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 20:47:57 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/29 18:15:42 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/29 21:12:40 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,10 @@ int	main(void)
 	while (1)
 	{
 		message = readline("minishell$: ");
-
 		if (message[0] != '\0')
 		{
 			add_history(message);
-			main.list = NULL; 
+			main.list = NULL;
 			main.exit_code = malloc(sizeof(char) + 1);
 			main.exit_code[0] = '0';
 			lexer(message, &main);
@@ -40,7 +39,6 @@ int	main(void)
 				head = head->next;
 			}
 		}
-		
 	}
 	return (0);
 }
