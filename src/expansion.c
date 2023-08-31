@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 17:25:59 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/29 21:29:19 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/31 17:12:02 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	join_nodes(t_mylist *lst, t_explst **list)
 	{
 		temp = new;
 		new = ft_strjoin(temp, node->str);
+		printf("New: %s\n", new);
 		// free(node->str);
 		if (temp)
 			free(temp);
@@ -50,7 +51,7 @@ void	expand(char *str, t_main *main, int *i, t_explst *node)
 }
 
 void	check_expansions(t_main *main, t_mylist *lst,
-	t_explst **node, t_explst **list)
+	t_explst *node, t_explst **list)
 {
 	int			i;
 	int			j;
@@ -59,7 +60,7 @@ void	check_expansions(t_main *main, t_mylist *lst,
 	j = 0;
 	while (lst->value[i] != '\0')
 	{
-		new_node(node, list);
+		new_node(node, *list);
 		while (lst->value[i] != '$' && lst->value[i] != '\0')
 		{
 			j++;
@@ -67,21 +68,20 @@ void	check_expansions(t_main *main, t_mylist *lst,
 		}
 		if (j > 0)
 		{
-			(*node)->str = malloc(sizeof(char) * (j + 1));
-			ft_strlcpy((*node)->str, &lst->value[i - j], j + 1);
+			node->str = malloc(sizeof(char) * (j + 1));
+			ft_strlcpy(node->str, &lst->value[i - j], j + 1);
 			j = 0;
 		}
 		else if (lst->value[i] == '$')
-			expand(lst->value, main, &i, *node);
+			expand(lst->value, main, &i, node);
+
 	}
-	if (list != NULL)
-		join_nodes(lst, list);
 }
 
 void	expand_tokens(t_main *main)
 {
 	t_mylist	*head;
-	t_explst	*temp_list;
+	t_explst	**temp_list;
 	t_explst	*temp_node;
 
 	head = main->list;
@@ -91,11 +91,17 @@ void	expand_tokens(t_main *main)
 	{
 		if (head->type == WRD || head->type == WRD_QUOTED)
 		{
-
-			check_expansions(main, head, &temp_node, &temp_list);
+			check_expansions(main, head, temp_node, temp_list);
+			if (temp_list != NULL)
+				join_nodes(head, temp_list);
+			// if (temp_node && temp_node->str != NULL)
+			// 	free(temp_node->str);
+			// if (temp_list && temp_list->str != NULL)
+			// 	free(temp_list->str);
 		}
 		if (head->next == NULL)
 			break ;
+		printf("%s\n", head->value);
 		head = head->next;
 	}
 }

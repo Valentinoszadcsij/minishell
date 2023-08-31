@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/28 19:14:43 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/08/31 17:12:22 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,5 @@ void		exit_error_lexer(t_mylist *list);
 void		check_double_quotes(char *str, int *i, t_mylist *list);
 void		check_single_quotes(char *str, int *i, t_mylist *list);
 void		expand_tokens(t_main *main);
-void		new_node(t_explst **node, t_explst **list);
+void		new_node(t_explst *node, t_explst *list);
 #endif
