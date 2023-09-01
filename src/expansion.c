@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 17:25:59 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/31 17:12:02 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/01 20:44:06 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	join_nodes(t_mylist *lst, t_explst **list)
 	{
 		temp = new;
 		new = ft_strjoin(temp, node->str);
-		printf("New: %s\n", new);
-		// free(node->str);
+		if (node->str)
+			free(node->str);
 		if (temp)
 			free(temp);
 		if (node->next == NULL)
@@ -36,31 +36,67 @@ void	join_nodes(t_mylist *lst, t_explst **list)
 	lst->value = new;
 	free(temp);
 }
-void	expand(char *str, t_main *main, int *i, t_explst *node)
-{
-	*i = *i + 1;
-	if (str[*i] == '?' && str[*i - 1] == '$')
-		node->str = main->exit_code;
-	*i = *i + 1;
-	// while (lst->value[*i] != '\0' && (ft_isalnum(lst->value[*i]) || lst->value[*i] == '_'))
-	// {
-	// 		*i += 1;
-	// }
-	
 
+char	*expand_var(char *var, char **env)
+{
+	int		i;
+	int		j;
+	char	*value;
+	char	*temp;
+
+	j = 0;
+	i = 0;
+	while (ft_strncmp(env[i], var, ft_strlen(var)) != 0 && env[i] != NULL)
+		i++;
+	free(var);
+	temp = ft_strchr(env[i], '=');
+	temp++;
+	value = ft_substr(temp, 0, ft_strlen(temp));
+	return (value);
 }
 
-void	check_expansions(t_main *main, t_mylist *lst,
-	t_explst *node, t_explst **list)
+void	expand(char *str, t_main *main, int *i, t_explst *node)
+{
+	int		j;
+	char	*var_name;
+
+	j = 0;
+	*i = *i + 1;
+	if (str[*i] == '?' && str[*i - 1] == '$')
+	{	
+		node->str = main->exit_code;
+		*i = *i + 1;
+	}
+	else
+	{	
+		while (str[*i] != '\0' && (ft_isalnum(str[*i]) || str[*i] == '_'))
+		{	
+			j++;
+			*i += 1;
+		}
+		if (j > 0)
+		{
+			var_name = ft_substr(&str[*i - j], 0, j);
+			node->str = expand_var(var_name, main->env);
+		}
+		else
+			node->str = ft_strdup("$");
+	}
+}
+
+t_explst	*check_expansions(t_main *main, t_mylist *lst,
+	t_explst *node)
 {
 	int			i;
 	int			j;
+	t_explst	*list;
 
 	i = 0;
 	j = 0;
+	list = NULL;
 	while (lst->value[i] != '\0')
 	{
-		new_node(node, *list);
+		node = new_node(&list);
 		while (lst->value[i] != '$' && lst->value[i] != '\0')
 		{
 			j++;
@@ -68,20 +104,19 @@ void	check_expansions(t_main *main, t_mylist *lst,
 		}
 		if (j > 0)
 		{
-			node->str = malloc(sizeof(char) * (j + 1));
-			ft_strlcpy(node->str, &lst->value[i - j], j + 1);
+			node->str = ft_substr(lst->value, i - j, j);
 			j = 0;
 		}
 		else if (lst->value[i] == '$')
 			expand(lst->value, main, &i, node);
-
 	}
+	return (list);
 }
 
 void	expand_tokens(t_main *main)
 {
 	t_mylist	*head;
-	t_explst	**temp_list;
+	t_explst	*temp_list;
 	t_explst	*temp_node;
 
 	head = main->list;
@@ -91,17 +126,16 @@ void	expand_tokens(t_main *main)
 	{
 		if (head->type == WRD || head->type == WRD_QUOTED)
 		{
-			check_expansions(main, head, temp_node, temp_list);
+			temp_list = check_expansions(main, head, temp_node);
 			if (temp_list != NULL)
-				join_nodes(head, temp_list);
-			// if (temp_node && temp_node->str != NULL)
-			// 	free(temp_node->str);
-			// if (temp_list && temp_list->str != NULL)
-			// 	free(temp_list->str);
+				join_nodes(head, &temp_list);
+			if (temp_node)
+				free(temp_node);
+			if (temp_list)
+				free(temp_list);
 		}
 		if (head->next == NULL)
 			break ;
-		printf("%s\n", head->value);
 		head = head->next;
 	}
 }

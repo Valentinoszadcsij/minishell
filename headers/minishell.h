@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/31 17:12:22 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/01 20:55:41 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define GRT 4
 # define WRD 5
 # define WRD_QUOTED 6
-# define WRD_SINGLE_Q -2
+# define WRD_SINGLE_Q 7
 
 //Errors
 #define ERR_MALLOC 10
@@ -65,5 +65,6 @@ void		exit_error_lexer(t_mylist *list);
 void		check_double_quotes(char *str, int *i, t_mylist *list);
 void		check_single_quotes(char *str, int *i, t_mylist *list);
 void		expand_tokens(t_main *main);
-void		new_node(t_explst *node, t_explst *list);
+t_explst		*new_node(t_explst **list);
+char	**dup_env(char **env);
 #endif

@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   dup_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/21 18:41:41 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/01 18:41:11 by voszadcs         ###   ########.fr       */
+/*   Created: 2023/08/31 20:28:48 by voszadcs          #+#    #+#             */
+/*   Updated: 2023/09/01 19:08:16 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/minishell.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+char	**dup_env(char **env)
 {
-	size_t	i;
+	char	**env_cpy;
+	int		i;
+	int		len;
 
 	i = 0;
-	if (dstsize != 0)
+	while (env[i] != NULL)
+		i++;
+	env_cpy = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (env[i] != NULL)
 	{
-		while (i < dstsize - 1 && src[i] != '\0')
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
+		len = ft_strlen(env[i]);
+		env_cpy[i] = ft_substr(env[i], 0, len);
+		i++;
 	}
-	return (ft_strlen(src));
+	env_cpy[i] = NULL;
+	return (env_cpy);
 }
