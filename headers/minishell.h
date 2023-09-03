@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/01 20:55:41 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/03 02:52:36 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,7 @@
 # define WRD_SINGLE_Q 7
 
 //Errors
-#define ERR_MALLOC 10
-// typedef struct s_redr
-// {
-// 	char	*sign;
-// 	char	*value;
-// }	t_redr;
+# define ERR_MALLOC 10
 
 typedef struct s_explst
 {
@@ -61,10 +56,11 @@ typedef struct s_main
 //Functions
 
 void		lexer(char *str, t_main *main);
-void		exit_error_lexer(t_mylist *list);
 void		check_double_quotes(char *str, int *i, t_mylist *list);
 void		check_single_quotes(char *str, int *i, t_mylist *list);
 void		expand_tokens(t_main *main);
-t_explst		*new_node(t_explst **list);
-char	**dup_env(char **env);
+void		skip_char(char *str, int *j, int *i);
+t_explst	*new_node(t_explst **list);
+char		**dup_env(char **env);
+void		postsplit(t_main *main);
 #endif

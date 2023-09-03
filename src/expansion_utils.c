@@ -6,11 +6,30 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 16:28:29 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/31 20:02:44 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/03 02:52:23 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+void	skip_char(char *str, int *j, int *i)
+{
+	while (str[*i] != '$' && str[*i] != '\0')
+	{
+		if (str[*i] == '\'')
+		{
+			*i += 1;
+			*j += 1;
+			while (str[*i] != '\'')
+			{
+				*i += 1;
+				*j += 1;
+			}
+		}
+		*j += 1;
+		*i += 1;
+	}
+}
 
 t_explst	*new_node(t_explst **list)
 {
@@ -18,8 +37,6 @@ t_explst	*new_node(t_explst **list)
 	t_explst	*node;
 
 	node = malloc(sizeof(t_explst));
-	if (!node)
-		exit(-1);//malloc error
 	node->next = NULL;
 	node->str = NULL;
 	if (*list == NULL)

@@ -6,12 +6,12 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 17:25:59 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/01 20:44:06 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/03 02:55:29 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-// Need to fix: old notes strings copied to next ones
+
 void	join_nodes(t_mylist *lst, t_explst **list)
 {
 	t_explst	*node;
@@ -46,13 +46,23 @@ char	*expand_var(char *var, char **env)
 
 	j = 0;
 	i = 0;
-	while (ft_strncmp(env[i], var, ft_strlen(var)) != 0 && env[i] != NULL)
-		i++;
+	while (env[i] != NULL)
+	{
+		if (ft_strncmp(env[i], var, ft_strlen(var)) == 0
+			&& env[i][ft_strlen(var)] == '=')
+			break ;
+		else
+			i++;
+	}
 	free(var);
-	temp = ft_strchr(env[i], '=');
-	temp++;
-	value = ft_substr(temp, 0, ft_strlen(temp));
-	return (value);
+	if (env[i] != NULL)
+	{
+		temp = ft_strchr(env[i], '=');
+		temp++;
+		value = ft_substr(temp, 0, ft_strlen(temp));
+		return (value);
+	}
+	return (NULL);
 }
 
 void	expand(char *str, t_main *main, int *i, t_explst *node)
@@ -64,7 +74,7 @@ void	expand(char *str, t_main *main, int *i, t_explst *node)
 	*i = *i + 1;
 	if (str[*i] == '?' && str[*i - 1] == '$')
 	{	
-		node->str = main->exit_code;
+		node->str = ft_substr(main->exit_code, 0, ft_strlen(main->exit_code));
 		*i = *i + 1;
 	}
 	else
@@ -97,11 +107,7 @@ t_explst	*check_expansions(t_main *main, t_mylist *lst,
 	while (lst->value[i] != '\0')
 	{
 		node = new_node(&list);
-		while (lst->value[i] != '$' && lst->value[i] != '\0')
-		{
-			j++;
-			i++;
-		}
+		skip_char(lst->value, &j, &i);
 		if (j > 0)
 		{
 			node->str = ft_substr(lst->value, i - j, j);
