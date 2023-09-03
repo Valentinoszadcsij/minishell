@@ -6,15 +6,12 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 20:47:57 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/03 03:32:17 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/03 16:43:28 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
-#include <stdio.h>
 
-
-//Continue copying enva and working on expansion
 int	main(int argc, char **argv, char **env)
 {
 	char		*message;

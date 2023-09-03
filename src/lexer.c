@@ -6,12 +6,13 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 20:45:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/01 21:20:35 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/03 21:53:42 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
+//somehow didnt include redirection tokens
 int	word_token(char *str, t_mylist *list, int i)
 {
 	int		start;
