@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/03 02:52:36 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/06 22:21:39 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,8 @@ void		skip_char(char *str, int *j, int *i);
 t_explst	*new_node(t_explst **list);
 char		**dup_env(char **env);
 void		postsplit(t_main *main);
+void		skip_chars(char *str, int *i, int *j);
+void		free_old_list(t_mylist *list);
+void		list_iter(t_mylist **list, t_mylist *node);
+void		remove_quotes(t_mylist *list);
 #endif

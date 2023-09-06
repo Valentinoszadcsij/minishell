@@ -6,27 +6,24 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 19:29:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/03 20:37:18 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/06 21:42:59 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-void	free_old_list(t_mylist *list)
+t_mylist	*create_redir_node(int type, char *str)
 {
-	t_mylist	*head;
-	t_mylist	*temp;
+	t_mylist	*node;
 
-	head = list;
-	while (1)
-	{
-		temp = head;
-		head = head->next;
-		free(temp->value);
-		free(temp);
-		if (head == NULL)
-			break ;
-	}
+	node = malloc(sizeof(t_mylist));
+	node->type = type;
+	if (str)
+		node->value = ft_substr(str, 0, ft_strlen(str));
+	else
+		node->value = NULL;
+	node->next = NULL;
+	return (node);
 }
 
 t_mylist	*new_split_node(int start, int end, char *str)
@@ -34,66 +31,31 @@ t_mylist	*new_split_node(int start, int end, char *str)
 	t_mylist	*node;
 
 	node = malloc(sizeof(t_mylist));
-	node->type = WRD;
+	if (ft_strchr(str, '\"') == 0 && ft_strchr(str, '\'') == 0)
+		node->type = WRD;
+	else
+		node->type = WRD_QUOTED;
 	node->value = ft_substr(str, start, end - start);
 	node->next = NULL;
 	return (node);
-}
-
-void	skip_chars(char *str, int *i)
-{
-	while (str[*i] != '\0' && str[*i] != ' ')
-	{
-		if (str[*i] == '\"')
-		{
-			*i += 1;
-			while (str[*i] != '\"')
-				*i += 1;
-			*i += 1;
-		}
-		else if (str[*i] == '\'')
-		{
-			*i += 1;
-			while (str[*i] != '\'')
-				*i += 1;
-			*i += 1;
-		}
-		else
-			*i += 1;
-	}
-	printf("OUT\n");
 }
 
 t_mylist	*split_str(char *str)
 {
 	t_mylist	*list;
 	t_mylist	*node;
-	t_mylist	*head;
 	int			j;
 	int			i;
 
 	list = NULL;
 	i = 0;
 	j = 0;
-	while (str[i] != '\0')
+	while (str != NULL && str[i] != '\0')
 	{
-		while (str[i] == ' ')
-		{	
-			i++;
-			j++;
-		}
-		skip_chars(str, &i);
+		skip_chars(str, &i, &j);
 		node = new_split_node(j, i, str);
 		j = i;
-		if (!list)
-			list = node;
-		else
-		{
-			head = list;
-			while (head->next != NULL)
-				head = head->next;
-			head->next = node;
-		}
+		list_iter(&list, node);
 	}
 	return (list);
 }
@@ -107,8 +69,8 @@ void	postsplit(t_main *main)
 	head = main->list;
 	temp_list = NULL;
 	while (1)
-	{	
-		if (head->type == WRD || head->type == WRD_QUOTED)
+	{
+		if ((head->type == WRD || head->type == WRD_QUOTED) && head->value != NULL)
 		{
 			if (!temp_list)
 				temp_list = split_str(head->value);
@@ -117,7 +79,18 @@ void	postsplit(t_main *main)
 			temp = temp_list;
 			while (temp->next != NULL)
 				temp = temp->next;
-			temp->next = head->next;
+			temp->next = NULL;
+		}
+		else
+		{
+			if (!temp_list)
+				temp_list = create_redir_node(head->type, head->value);
+			else
+				temp->next = create_redir_node(head->type, head->value);
+			temp = temp_list;
+			while (temp->next != NULL)
+				temp = temp->next;
+			temp->next = NULL;
 		}
 		if (!head->next)
 			break ;
@@ -125,4 +98,5 @@ void	postsplit(t_main *main)
 	}
 	free_old_list(main->list);
 	main->list = temp_list;
+	remove_quotes(main->list);
 }

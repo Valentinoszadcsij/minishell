@@ -6,11 +6,12 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 06:27:33 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/08/29 16:39:36 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/06 16:35:23 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 //Changed from original Libft ft_strjoin. Now if any string as parameter is NULL
 //function takes it as 0 length;
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -20,6 +21,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		size1;
 	int		size2;
 
+	if (s1 == NULL && s2 == NULL)
+		return (NULL);
 	if (s1 == NULL)
 		size1 = 0;
 	else

@@ -6,11 +6,23 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 20:47:57 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/03 16:43:28 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/06 17:10:48 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+int	is_not_spaces(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] == ' ')
+		i++;
+	if (str[i] == '\0')
+		return (add_history(str), 0);
+	return (1);
+}
 
 int	main(int argc, char **argv, char **env)
 {
@@ -24,7 +36,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		message = readline("minishell$: ");
-		if (message[0] != '\0')
+		if (message[0] != '\0' && is_not_spaces(message))
 		{
 			add_history(message);
 			main.list = NULL;
@@ -35,7 +47,7 @@ int	main(int argc, char **argv, char **env)
 			expand_tokens(&main);
 			postsplit(&main);
 			head = main.list;
-			while (1)
+			while (1 && head)
 			{
 				printf("Type: %d; Value: %s\n", head->type, head->value);
 				if (head->next == NULL)
