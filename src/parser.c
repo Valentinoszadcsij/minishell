@@ -6,11 +6,32 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 16:15:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/10 15:42:39 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/13 00:56:10 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
+
+void	parser_free(t_main *main)
+{
+	t_mylist	*node;
+	t_mylist	*temp;
+
+	node = main->list;
+	while (1)
+	{
+		if (node->value)
+			free(node->value);
+		if (node)
+		{
+			temp = node->next;
+			free(node);
+		}
+		node = temp;
+		if (node == NULL)
+			break ;
+	}	
+}
 
 void	fix_types(t_main *main)
 {
@@ -25,11 +46,11 @@ void	fix_types(t_main *main)
 			if (head->next && (head->next->type == WRD
 					|| head->next->type == WRD_QUOTED))
 				head->next->type = WRD_REDIR;
+			else if (head->type == WRD_REDIR)
+				head->next->type = HEREDOC_QUOT;
 		}
 		else if (head->type == WRD || head->type == WRD_QUOTED)
-		{	
 			head->type = WRD_CMD;
-		}
 		if (head->next == NULL)
 			break ;
 		head = head->next;
@@ -38,30 +59,28 @@ void	fix_types(t_main *main)
 
 void	init_data(t_main *main)
 {
-	int			count;
+	int	count;
+	int	i;
 
 	count = count_procs(main->list);
+	i = 0;
 	main->data = malloc(sizeof(t_data) * count);
+	while (i < count)
+	{
+		main->data[i].fd[0] = -1;
+		main->data[i].fd[1] = -1;
+		i++;
+	}
 	fix_types(main);
 }
 
 int	parser(t_main *main)
 {
-	t_mylist	*node;
-
-	node = main->list;
 	init_data(main);
-	if (check_syntax(main) != 0)
+	if (parse_redir(main) != 0)
 	{		
-		while (1)
-		{
-			if (node->value)
-				free(node->value);
-			if (node->next == NULL)
-				break ;
-			node = node->next;
-		}
-		return (printf("out\n") ,1);
+		parser_free(main);
+		return (-1);
 	}
 	return (0);
 }

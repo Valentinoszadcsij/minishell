@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 17:25:59 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/09 17:51:43 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/12 23:27:08 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ void	expand_tokens(t_main *main)
 			if (temp_list)
 				free(temp_list);
 		}
+		is_heredoc(head);
 		if (head->next == NULL)
 			break ;
 		head = head->next;

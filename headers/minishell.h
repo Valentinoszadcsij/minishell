@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/10 15:23:44 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/13 01:10:24 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
 # include "../lib/libft/libft.h"
 
 //Lexer types
@@ -33,6 +34,7 @@
 # define WRD_REDIR 8
 # define WRD_CMD 9
 # define WRD_ARG 10
+# define HEREDOC_QUOT 11
 
 //Errors
 # define ERR_MALLOC 10
@@ -71,6 +73,7 @@ void		check_double_quotes(char *str, int *i, t_mylist *list);
 void		check_single_quotes(char *str, int *i, t_mylist *list);
 void		expand_tokens(t_main *main);
 void		skip_char(char *str, int *j, int *i);
+void		is_heredoc(t_mylist *node);
 t_explst	*new_node(t_explst **list);
 char		**dup_env(char **env);
 void		postsplit(t_main *main);
@@ -78,7 +81,9 @@ void		skip_chars(char *str, int *i, int *j);
 void		free_old_list(t_mylist *list);
 void		list_iter(t_mylist **list, t_mylist *node);
 void		remove_quotes(t_mylist *list);
-int		parser(t_main *main);
+int			parser(t_main *main);
+void		parser_free(t_main *main);
 int			count_procs(t_mylist *main);
-int			check_syntax(t_main *main);
+int			parse_redir(t_main *main);
+int			do_redir(t_data *data, t_mylist *node);
 #endif

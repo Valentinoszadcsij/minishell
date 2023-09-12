@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 16:28:29 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/03 02:52:23 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/12 23:25:55 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,11 @@ t_explst	*new_node(t_explst **list)
 		head->next = node;
 	}
 	return (node);
+}
+
+void	is_heredoc(t_mylist *node)
+{
+	if (node->type == LSLS && node->next
+		&& node->next->type == WRD_QUOTED)
+		node->next->type = WRD_REDIR;
 }
