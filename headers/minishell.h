@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/13 01:10:24 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/13 20:37:17 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,5 @@ void		parser_free(t_main *main);
 int			count_procs(t_mylist *main);
 int			parse_redir(t_main *main);
 int			do_redir(t_data *data, t_mylist *node);
+int			heredoc(t_data *data, t_mylist *node);
 #endif

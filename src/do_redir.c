@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 23:09:10 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/13 01:12:10 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/13 21:13:06 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	redir_input(t_data *data, t_mylist *node)
 {
 	char	*error;
 
-	if (data->fd[0] != -1)
+	if (data->fd[0] != 0)
 		close(data->fd[0]);
 	else
 		data->fd[0] = open(node->next->value, O_RDONLY);
@@ -28,14 +28,63 @@ int	redir_input(t_data *data, t_mylist *node)
 	return (1);
 }
 
+int	redir_output(t_data *data, t_mylist *node)
+{
+	char	*error;
+
+	if (data->fd[1] != 1)
+		close(data->fd[1]);
+	else
+		data->fd[1] = open(node->next->value,
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (data->fd[1] == -1)
+	{	
+		error = ft_strjoin("minishell: ", node->next->value);
+		return (perror(error), free(error), 0);
+	}
+	return (1);
+}
+
 int	do_redir(t_data *data, t_mylist *node)
 {
 	if (node->type == LS)
+	{	
 		if (!redir_input(data, node))
 			return (0);
-	// else if (node->type == GRT)
-	// 	redir_output(data, node);
-	// else if (node->type == GRTGRT)
-	// 	redir_append(data, node);
+	}
+	else if (node->type == GRT || node->type == GRTGRT)
+	{	
+		if (!redir_output(data, node))
+			return (0);
+	}
+	return (1);
+}
+
+int	heredoc(t_data *data, t_mylist *node)
+{
+	char	*message;
+	char	*error;
+	int		temp;
+	temp = open("temp.heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (temp < 0)
+	{	
+		error = ft_strjoin("minishell: ", "temp.heredoc");
+		return (perror(error), free(error), 0);
+	}
+	while (1)
+	{
+		message = readline("> ");
+		if (ft_strncmp(message, node->next->value, ft_strlen(message)) != 0)
+		{	
+			ft_putstr_fd(message, temp);
+			ft_putchar_fd('\n', temp);
+		}
+		else
+			break ;
+	}
+	if (data->fd[0] != 0)
+		close(data->fd[0]);
+	data->fd[0] = temp;
+	
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 18:17:18 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/13 01:11:56 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/13 20:37:29 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,9 @@ int	check_heredoc(t_mylist *head, t_main *main, int *i)
 	(void) i;
 	if (head->type == LSLS)
 	{
-			// heredoc(main->data[*i], head);
 		if (head->next && (head->next->type == WRD_REDIR
 				|| head->next->type == HEREDOC_QUOT))
-			printf("heredoc() call\n");
+			heredoc(&main->data[*i], head);
 		else
 			return (syntax_error(main, head->type), 0);
 	}
@@ -83,11 +82,10 @@ int	parse_redir(t_main *main)
 	{
 		if (!check_pipe(head, main, &i) || !check_redir(head, main, &i)
 			|| !check_heredoc(head, main, &i))
-			return (-1);
+			return (free(main->data), -1);
 		if (!head->next)
 			break ;
 		head = head->next;
 	}
-	printf("processes: %d\n", i);
 	return (0);
 }
