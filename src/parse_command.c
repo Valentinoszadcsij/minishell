@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 21:40:11 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/14 02:18:27 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/14 20:07:03 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,6 @@ void	join_args(t_mylist *head, char **cmd)
 	}
 }
 
-// void	print_data(t_main *main, int i)
-// {
-// 	char **args;
-// 	int	j = 0;
-
-// 	args = main->data[i].cmd;
-
-// 		while (args[j] != NULL)
-// 		{
-// 			printf("%s ", args[j]);
-// 			j++;
-// 		}
-// 			printf("\n");
-// }
-
 void	parse_command(t_main *main)
 {
 	t_mylist	*head;
@@ -73,7 +58,6 @@ void	parse_command(t_main *main)
 		main->data[i].cmd = malloc(sizeof(char *) * (count + 1));
 		main->data[i].cmd[count] = NULL;
 		join_args(head, main->data[i].cmd);
-		// print_data(main, i);
 		while (head->next)
 		{
 			head = head->next;

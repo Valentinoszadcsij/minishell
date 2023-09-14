@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 23:09:10 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/14 15:15:13 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/14 20:04:11 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,34 +58,5 @@ int	do_redir(t_data *data, t_mylist *node)
 		if (!redir_output(data, node))
 			return (0);
 	}
-	return (1);
-}
-
-int	heredoc(t_data *data, t_mylist *node)
-{
-	char	*message;
-	char	*error;
-	int		temp;
-	temp = open("temp.heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (temp < 0)
-	{	
-		error = ft_strjoin("minishell: ", "temp.heredoc");
-		return (perror(error), free(error), 0);
-	}
-	while (1)
-	{
-		message = readline("> ");
-		if (ft_strncmp(message, node->next->value, ft_strlen(message)) != 0)
-		{	
-			ft_putstr_fd(message, temp);
-			ft_putchar_fd('\n', temp);
-		}
-		else
-			break ;
-	}
-	if (data->fd[0] != 0)
-		close(data->fd[0]);
-	data->fd[0] = temp;
-	
 	return (1);
 }

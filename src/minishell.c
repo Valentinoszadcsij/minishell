@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 20:47:57 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/14 15:38:01 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/14 16:34:00 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ int	main(int argc, char **argv, char **env)
 {
 	char		*message;
 	t_main		main;
-	// t_mylist	*head;
 	int i = 0;
-	int	j = 0;
 
 	if (argc > 1)
 		return (printf("%s: %s: no such file or directory\n", argv[0], argv[1]), 1);
@@ -49,9 +47,14 @@ int	main(int argc, char **argv, char **env)
 			postsplit(&main);
 			if (parser(&main) == 0)
 			{
-				
+				while (i < main.procs)
+				{
+				 printf("fd in: %d\n", main.data[i].fd[0]);
+				 printf("fd out: %d\n", main.data[i].fd[1]);
+				 i++;
+				}
 			}
-			
+			i = 0;
 		}
 	}
 	return (0);

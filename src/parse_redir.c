@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 18:17:18 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/14 02:18:53 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/14 19:57:58 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	check_heredoc(t_mylist *head, t_main *main, int *i)
 	{
 		if (head->next && (head->next->type == WRD_REDIR
 				|| head->next->type == HEREDOC_QUOT))
-			heredoc(&main->data[*i], head);
+			heredoc(&main->data[*i], head, main);
 		else
 			return (syntax_error(main, head->type), 0);
 	}
@@ -81,7 +81,7 @@ int	parse_redir(t_main *main)
 	{
 		if (!check_pipe(head, main, &i) || !check_redir(head, main, &i)
 			|| !check_heredoc(head, main, &i))
-			return (free(main->data), -1);
+			return (main->error_code = 1, free(main->data), -1);
 		if (!head->next)
 			break ;
 		head = head->next;
