@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 23:09:10 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/13 21:13:06 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/14 03:04:05 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ int	redir_output(t_data *data, t_mylist *node)
 
 	if (data->fd[1] != 1)
 		close(data->fd[1]);
-	else
+	else if (node->type == GRT)
 		data->fd[1] = open(node->next->value,
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (node->type == GRTGRT)
+		data->fd[1] = open(node->next->value, O_WRONLY | O_CREAT, 0644);
 	if (data->fd[1] == -1)
 	{	
 		error = ft_strjoin("minishell: ", node->next->value);

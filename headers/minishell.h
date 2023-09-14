@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/13 20:37:17 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/13 22:14:58 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_data
 {
 	char	**cmd;
 	int		fd[2];
+	int		index;
 }	t_data;
 
 typedef struct s_main
@@ -87,4 +88,6 @@ int			count_procs(t_mylist *main);
 int			parse_redir(t_main *main);
 int			do_redir(t_data *data, t_mylist *node);
 int			heredoc(t_data *data, t_mylist *node);
+int			check_pipe(t_mylist *head, t_main *main, int *i);
+void		parse_command(t_main *main);
 #endif

@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 20:47:57 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/13 17:33:46 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/14 03:00:19 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,15 @@ int	is_not_spaces(char *str)
 		return (add_history(str), 0);
 	return (1);
 }
+// Need to fix env duplication in case of no original env
 
 int	main(int argc, char **argv, char **env)
 {
 	char		*message;
 	t_main		main;
-	t_mylist	*head;
+	// t_mylist	*head;
+	int i = 0;
+	int	j = 0;
 
 	if (argc > 1)
 		return (printf("%s: %s: no such file or directory\n", argv[0], argv[1]), 1);
@@ -46,15 +49,25 @@ int	main(int argc, char **argv, char **env)
 			postsplit(&main);
 			if (parser(&main) == 0)
 			{
-				head = main.list;
-				while (1 && head)
+				while (i < main.procs)
 				{
-					printf("Type: %d; Value: %s\n", head->type, head->value);
-					if (head->next == NULL)
-						break ;
-					head = head->next;
+					printf("Command %d: ", i);
+					while (main.data[i].cmd[j] != NULL)
+					{
+						printf("%s ", main.data[i].cmd[j]);
+						free(main.data[i].cmd[j]);
+						j++;
+					}
+					printf("\ninput fd = %d\n", main.data[i].fd[0]);
+					printf("output fd = %d\n", main.data[i].fd[1]);
+					free(main.data[i].cmd);
+					i++;
+					j = 0;
 				}
+				free(main.data);
 			}
+			i = 0;
+
 		}
 	}
 	return (0);

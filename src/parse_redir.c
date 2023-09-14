@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 18:17:18 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/13 20:37:29 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/14 02:18:53 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	syntax_error(t_main *main, int type)
 		printf("minishell: syntax error near unexpected token `newLine'\n");
 	else if (type == PIPE)
 		printf("minishell: syntax error near unexpected token `|'\n");
-
 }
 
 int	check_pipe(t_mylist *head, t_main *main, int *i)
