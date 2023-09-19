@@ -1,0 +1,36 @@
+<wrong_input cat:
+	- keeps exec cat
+<ok_input ls | <wrong_input 
+	- in bash nothing execs
+	- in minishell does exec ls
+minishell$: < jadgs 
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==8521==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x0001046360ce bp 0x7ffeeb5ca490 sp 0x7ffeeb5ca490 T0)
+==8521==The signal is caused by a READ memory access.
+
+------------------------
+minishell$: echo $USErew
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==11948==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x00010dc76cf0 bp 0x7ffee1f89470 sp 0x7ffee1f89470 T0)
+
+minishell$: unset PATH
+minishell$: ls
+1111
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==12965==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x000103a4dcf0 bp 0x7ffeec1b2250 sp 0x7ffeec1b2250 T0)
+==12965==The signal is caused by a READ memory access.
+==12965==Hint: address points to the zero page.
+    #0 0x103a4dcf0 in ft_strlen+0x20 (minishell:x86_64+0x100000cf0)
+    #1 0x103a5d684 in get_path_cmd+0x144 (minishell:x86_64+0x100010684)
+    #2 0x103a5b5a9 in run_child_procs+0x269 (minishell:x86_64+0x10000e5a9)
+    #3 0x103a5be32 in exec_procs+0x392 (minishell:x86_64+0x10000ee32)
+    #4 0x103a5c3d4 in execute+0x514 (minishell:x86_64+0x10000f3d4)
+    #5 0x103a4f277 in main+0x3f7 (minishell:x86_64+0x100002277)
+    #6 0x7fff715aacc8 in start+0x0 (libdyld.dylib:x86_64+0x1acc8)
+
+
+	UNLINK heredocs
+	Free stuff

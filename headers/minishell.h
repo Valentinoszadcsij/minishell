@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/14 18:22:57 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/19 08:41:10 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,15 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <stdio.h>
+# include <string.h>
+# include <stdbool.h>
+# include <sys/stat.h>
+# include <sys/errno.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <fcntl.h>
 # include "../lib/libft/libft.h"
 
 //Lexer types
@@ -54,9 +59,14 @@ typedef struct s_mylist
 typedef struct s_data
 {
 	char	**cmd;
-	int		fd[2];
 	int		index;
+	int		fd[2];
 }	t_data;
+
+typedef struct s_pipes
+{
+	int	pipe[2];
+}	t_pipes;
 
 typedef struct s_main
 {
@@ -65,6 +75,9 @@ typedef struct s_main
 	t_data		*data;
 	int			procs;
 	int			error_code;
+	t_pipes		*pipes;
+	pid_t		*pid;
+	int			heredocs;
 }	t_main;
 
 //Functions
@@ -86,8 +99,61 @@ int			parser(t_main *main);
 void		parser_free(t_main *main);
 int			count_procs(t_mylist *main);
 int			parse_redir(t_main *main);
-int			do_redir(t_data *data, t_mylist *node);
-int			heredoc(t_data *data, t_mylist *node, t_main *main);
+int			do_redir(t_main *main, int ind);
+int			heredoc(t_mylist *node, t_main *main, int *i);
+char		*get_var(char *str, int i, char **env);
 int			check_pipe(t_mylist *head, t_main *main, int *i);
+char		*here_file_name(int num);
 void		parse_command(t_main *main);
+void		execute(t_main *main);
+
+/* unset */
+int		execute_unset(t_data *data, t_main *main);
+bool	remove_variable(char **envpp, const char *var);
+int		is_token_valid_unset(char *token);
+void	free_environment(char **envpp);
+
+/* export  */
+
+void	execute_export(t_data *data, t_main *main);
+void	print_export(t_main *main);
+void	export_variable(char **args, t_main *main);
+bool	is_valid_identifier(const char *name);
+bool 	update_or_add_variable(t_main *main, char *new_var);
+
+/* pwd */
+void	execute_pwd(char **argv);
+
+/* env */
+int		execute_env(t_main *main);
+
+/* exit */
+
+int		execute_exit(t_data *data);
+int		ft_exit_number(char *str);
+
+/* echo */
+
+int		execute_echo(t_data *data);
+int		ft_repeat_str(char repeat, char *str, int start);
+
+/* cd */
+int		home_case(t_data *data, t_main *main);
+int		execute_cd(t_data *data, t_main *main);
+int		old_pwd(t_data *data,  t_main *main);
+
+/* builtins */
+void	execute_builtins(t_data *data, t_main *main);
+int		is_builtin(const char *command);
+char	*get_path_cmd(char *cmd, char **env);
+int		execute_external(t_data *data, t_main *main);
+
+/* execution */
+
+void		init_pipes(t_main *main);
+void	do_pipes(t_pipes *pipes, int ind, int procs);
+void	close_all_pipes(t_main *main);
+char	**dup_env(char **env);
+void	update_environment( t_main *main, char *new_var);
+char	*ft_getenv(char **env, const char *name);
 #endif

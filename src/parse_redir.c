@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/09 18:17:18 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/14 19:57:58 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/17 22:52:32 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,17 @@ int	check_redir(t_mylist *head, t_main *main, int *i)
 	{
 		if ((head->next && head->next->type != WRD_REDIR) || !head->next)
 			return (syntax_error(main, head->type), 0);
-		else
-			return (do_redir(&main->data[*i], head));
 	}
 	return (1);
 }
 
 int	check_heredoc(t_mylist *head, t_main *main, int *i)
-{
-	(void) i;
+{	
 	if (head->type == LSLS)
 	{
 		if (head->next && (head->next->type == WRD_REDIR
 				|| head->next->type == HEREDOC_QUOT))
-			heredoc(&main->data[*i], head, main);
+			heredoc(head, main, i);
 		else
 			return (syntax_error(main, head->type), 0);
 	}
@@ -76,11 +73,12 @@ int	parse_redir(t_main *main)
 	int			i;
 
 	i = 0;
+	main->heredocs = 0;
 	head = main->list;
 	while (1)
 	{
 		if (!check_pipe(head, main, &i) || !check_redir(head, main, &i)
-			|| !check_heredoc(head, main, &i))
+			|| !check_heredoc(head, main, &main->heredocs))
 			return (main->error_code = 1, free(main->data), -1);
 		if (!head->next)
 			break ;

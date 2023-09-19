@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 17:27:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/14 20:03:31 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/19 09:56:21 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,35 +52,6 @@ char	*rm_quotes(char *str)
 	return (cpy_no_quotes(str, temp));
 }
 
-char	*get_var(char *str, int i, char **env)
-{
-	char	*var;
-	int		j;
-
-	i++;
-	j = i;
-	while (str[i] != '\0' && str[i] != '$')
-		i++;
-	var = ft_substr(str, j, i - j);
-	i = 0;
-	while (env[i] != NULL)
-	{
-		if (ft_strncmp(env[i], var, ft_strlen(var)) == 0
-			&& env[i][ft_strlen(var)] == '=')
-			break ;
-		else
-			i++;
-	}
-	free(var);
-	if (env[i] != NULL)
-	{
-		var = ft_strchr(env[i], '=');
-		var++;
-		return (ft_substr(var, 0, ft_strlen(var)));
-	}
-	return (NULL);
-}
-
 char	*expand_rl(char *str, t_main *main)
 {
 	char	*temp;
@@ -109,31 +80,46 @@ char	*expand_rl(char *str, t_main *main)
 	return (free(str), temp);
 }
 
-int	heredoc(t_data *data, t_mylist *node, t_main *main)
+void	read_heredoc_input(char *name, t_mylist *node, t_main *main, int fd)
 {
 	char	*message;
-	char	*error;
 	char	*delim;
 
-	if (data->fd[0] != 0)
-		close(data->fd[0]);
-	data->fd[0] = open("temp.heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (data->fd[0] < 0)
-		return (error = ft_strjoin("minishell: ", "temp.heredoc"),
-			perror(error), free(error), 0);
 	delim = rm_quotes(node->next->value);
 	while (1)
 	{
 		message = readline("> ");
-		if (ft_strncmp(message, delim, ft_strlen(message)) != 0)
+		if ((ft_strncmp(message, delim, ft_strlen(message)) != 0))
 		{	
 			if (node->next->type == WRD_REDIR)
 				message = expand_rl(message, main);
-			ft_putstr_fd(message, data->fd[0]);
-			ft_putchar_fd('\n', data->fd[0]);
+			ft_putstr_fd(message, fd);
+			ft_putchar_fd('\n', fd);
 		}
-		else
+		else if (message[0] != '\0')
+		{	
+			node->type = LS;
+			node->next->type = WRD_REDIR;
+			free(node->next->value);
+			node->next->value = ft_substr(name, 0, ft_strlen(name));
 			break ;
+		}
 	}
+}
+
+int	heredoc(t_mylist *node, t_main *main, int *i)
+{
+	char	*error;
+	int		fd;
+	char	*name;
+
+	name = here_file_name(*i);
+	fd = open(name, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	*i += 1;
+	if (fd < 0)
+		return (error = ft_strjoin("minishell: ", name),
+			perror(error), free(error), 0);
+	read_heredoc_input(name, node, main, fd);
+	close(fd);
 	return (1);
 }
