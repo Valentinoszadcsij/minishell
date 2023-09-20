@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 17:27:49 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/19 09:56:21 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/19 22:29:30 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*cpy_no_quotes(char *src, char *new)
 	return (new);
 }
 
-char	*rm_quotes(char *str)
+char	*rm_quotes(char *str, int *type)
 {
 	int		i;
 	int		count;
@@ -47,6 +47,7 @@ char	*rm_quotes(char *str)
 	}
 	if (count == 0)
 		return (str);
+	*type = 20;
 	temp = malloc(sizeof(char) * (ft_strlen(str) - count + 1));
 	temp[ft_strlen(str) - count] = '\0';
 	return (cpy_no_quotes(str, temp));
@@ -62,8 +63,8 @@ char	*expand_rl(char *str, t_main *main)
 	temp = NULL;
 	if (str[i] == '$' && str[i + 1] == '?')
 	{
-		temp = ft_substr(ft_itoa(main->error_code),
-				0, ft_strlen(ft_itoa(main->error_code)));
+		temp = ft_substr(ft_itoa(g_error_code),
+				0, ft_strlen(ft_itoa(g_error_code)));
 		i++;
 	}
 	else if (str[i] == '$' && str[i + 1] == '$')
@@ -85,13 +86,13 @@ void	read_heredoc_input(char *name, t_mylist *node, t_main *main, int fd)
 	char	*message;
 	char	*delim;
 
-	delim = rm_quotes(node->next->value);
+	delim = rm_quotes(node->next->value, &node->next->type);
 	while (1)
 	{
 		message = readline("> ");
 		if ((ft_strncmp(message, delim, ft_strlen(message)) != 0))
 		{	
-			if (node->next->type == WRD_REDIR)
+			if (node->next->type != 20)
 				message = expand_rl(message, main);
 			ft_putstr_fd(message, fd);
 			ft_putchar_fd('\n', fd);

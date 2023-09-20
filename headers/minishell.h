@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 03:58:45 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/19 08:41:10 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/20 01:35:17 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <stdbool.h>
 # include <sys/stat.h>
 # include <sys/errno.h>
+# include <signal.h>
+# include <termios.h>
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -43,6 +45,8 @@
 
 //Errors
 # define ERR_MALLOC 10
+
+extern int	g_error_code;
 
 typedef struct s_explst
 {
@@ -74,7 +78,6 @@ typedef struct s_main
 	char		**env;
 	t_data		*data;
 	int			procs;
-	int			error_code;
 	t_pipes		*pipes;
 	pid_t		*pid;
 	int			heredocs;
@@ -106,54 +109,63 @@ int			check_pipe(t_mylist *head, t_main *main, int *i);
 char		*here_file_name(int num);
 void		parse_command(t_main *main);
 void		execute(t_main *main);
-
+void		is_not_found(t_main *main, char *cmd_path, char *cmd);
+void		exec_fail(t_main *main);
+void		free_child_process(t_main *main);
+char		*get_path(t_main *main, int ind);
+void		signal_handler(int main);
+void		rm_tmp_files(int num, t_main *main);
+void		expand_err(t_explst *node, int *i);
+void		free_main_process(t_main *main);
+void		c1(t_mylist **temp_list, t_mylist **temp, t_mylist **head);
+void		c2(t_mylist **temp_list, t_mylist **temp, t_mylist **head);
+t_mylist	*split_str(char *str);
+t_mylist	*create_redir_node(int type, char *str);
 /* unset */
-int		execute_unset(t_data *data, t_main *main);
-bool	remove_variable(char **envpp, const char *var);
-int		is_token_valid_unset(char *token);
-void	free_environment(char **envpp);
+int			execute_unset(t_data *data, t_main *main);
+bool		remove_variable(char **envpp, const char *var);
+int			is_token_valid_unset(char *token);
+void		free_environment(char **envpp);
 
 /* export  */
 
-void	execute_export(t_data *data, t_main *main);
-void	print_export(t_main *main);
-void	export_variable(char **args, t_main *main);
-bool	is_valid_identifier(const char *name);
-bool 	update_or_add_variable(t_main *main, char *new_var);
+void		execute_export(t_data *data, t_main *main);
+void		print_export(t_main *main);
+void		export_variable(char **args, t_main *main);
+bool		is_valid_identifier(const char *name);
+bool		update_or_add_variable(t_main *main, char *new_var);
 
 /* pwd */
-void	execute_pwd(char **argv);
+void		execute_pwd(char **argv);
 
 /* env */
-int		execute_env(t_main *main);
+int			execute_env(t_main *main);
 
 /* exit */
 
-int		execute_exit(t_data *data);
-int		ft_exit_number(char *str);
+int			execute_exit(t_data *data);
+int			ft_exit_number(char *str);
 
 /* echo */
 
-int		execute_echo(t_data *data);
-int		ft_repeat_str(char repeat, char *str, int start);
+int			execute_echo(t_data *data);
+int			ft_repeat_str(char repeat, char *str, int start);
 
 /* cd */
-int		home_case(t_data *data, t_main *main);
-int		execute_cd(t_data *data, t_main *main);
-int		old_pwd(t_data *data,  t_main *main);
+int			home_case(t_data *data, t_main *main);
+int			execute_cd(t_data *data, t_main *main);
+int			old_pwd(t_data *data, t_main *main);
 
 /* builtins */
-void	execute_builtins(t_data *data, t_main *main);
-int		is_builtin(const char *command);
-char	*get_path_cmd(char *cmd, char **env);
-int		execute_external(t_data *data, t_main *main);
-
+void		execute_builtins(t_data *data, t_main *main);
+int			is_builtin(const char *command);
+char		*get_path_cmd(char *cmd, char **env);
 /* execution */
 
 void		init_pipes(t_main *main);
-void	do_pipes(t_pipes *pipes, int ind, int procs);
-void	close_all_pipes(t_main *main);
-char	**dup_env(char **env);
-void	update_environment( t_main *main, char *new_var);
-char	*ft_getenv(char **env, const char *name);
+void		do_pipes(t_pipes *pipes, int ind, int procs);
+void		close_all_pipes(t_main *main);
+char		**dup_env(char **env);
+void		update_environment( t_main *main, char *new_var);
+char		*ft_getenv(char **env, const char *name);
 #endif

@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:34:21 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/16 19:49:32 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/20 01:32:22 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,28 @@ char	*get_var(char *str, int i, char **env)
 		return (ft_substr(var, 0, ft_strlen(var)));
 	}
 	return (NULL);
+}
+
+void	c1(t_mylist **temp_list, t_mylist **temp, t_mylist **head)
+{
+	if (!*temp_list)
+		*temp_list = split_str((*head)->value);
+	else
+		(*temp)->next = split_str((*head)->value);
+	(*temp) = *temp_list;
+	while ((*temp)->next != NULL)
+		*temp = (*temp)->next;
+	(*temp)->next = NULL;
+}
+
+void	c2(t_mylist **temp_list, t_mylist **temp, t_mylist **head)
+{
+	if (!*temp_list)
+		*temp_list = create_redir_node((*head)->type, (*head)->value);
+	else
+		(*temp)->next = create_redir_node((*head)->type, (*head)->value);
+	*temp = *temp_list;
+	while ((*temp)->next != NULL)
+		*temp = (*temp)->next;
+	(*temp)->next = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:02:01 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/19 13:46:56 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/20 02:17:54 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,42 +23,34 @@ void	ft_waitpid(t_main *main)
 		waitpid(main->pid[i], &status, 0);
 		i++;
 	}
-	//free
 	if (WIFEXITED(status))
-		main->error_code = WEXITSTATUS(status);
+		g_error_code = WEXITSTATUS(status);
 }
 
 void	run_child_procs(t_main *main, int ind)
 {
 	char	*cmd;
 
-	
 	if (main->pid[ind] == 0)
 	{
-		if (main->data[ind].cmd[0])
-			cmd = get_path_cmd(main->data[ind].cmd[0], main->env);
+		signal_handler(0);
+		cmd = get_path(main, ind);
 		if (main->procs > 1)
 		{	
 			do_pipes(main->pipes, ind, main->procs);
 			close_all_pipes(main);
 		}
 		if (!do_redir(main, ind))
-			exit (1);
+		{
+			free_child_process(main);
+			exit(g_error_code);
+		}
 		if (is_builtin(main->data[ind].cmd[0]))
 			execute_builtins(&main->data[ind], main);
 		else if (cmd)
 		{		
 			if (execve(cmd, main->data[ind].cmd, main->env) == -1)
-			{
-				// if (command has access)
-				// 	perror
-				// 	exit(126);
-				// else
-				// 	print comand not rl_eof_found
-				// 	exit(127);
-				perror("minishell:");
-				main->error_code = errno;
-			}
+				exec_fail(main);
 		}
 		exit(EXIT_FAILURE);
 	}
@@ -77,7 +69,7 @@ void	exec_procs(t_main *main)
 		main->pid[i] = fork();
 		if (main->pid[i] == -1)
 		{
-			main->error_code = 1;
+			g_error_code = 1;
 			perror("fork");
 			return ;
 		}

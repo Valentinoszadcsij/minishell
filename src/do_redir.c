@@ -6,7 +6,7 @@
 /*   By: voszadcs <voszadcs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 23:09:10 by voszadcs          #+#    #+#             */
-/*   Updated: 2023/09/19 09:11:58 by voszadcs         ###   ########.fr       */
+/*   Updated: 2023/09/19 22:29:30 by voszadcs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@ int	redir_input(t_data *data, t_mylist *node)
 	if (data->fd[0] == -1)
 	{	
 		error = ft_strjoin("minishell: ", node->next->value);
+		g_error_code = errno;
 		return (perror(error), free(error), 0);
 	}	
-		dup2(data->fd[0], STDIN_FILENO);
-		close(data->fd[0]);
+	dup2(data->fd[0], STDIN_FILENO);
+	close(data->fd[0]);
 	return (1);
 }
 
@@ -44,6 +45,7 @@ int	redir_output(t_data *data, t_mylist *node)
 	if (data->fd[1] == -1)
 	{	
 		error = ft_strjoin("minishell: ", node->next->value);
+		g_error_code = errno;
 		return (perror(error), free(error), 0);
 	}
 	dup2(data->fd[1], STDOUT_FILENO);
